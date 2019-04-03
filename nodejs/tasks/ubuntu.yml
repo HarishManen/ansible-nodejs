@@ -1,0 +1,27 @@
+---
+
+#- name: Update packages (this is equivalent to yum update -y)
+#  apt: name=* state=latest
+
+- name: Install nodejs
+  apt: name=nodejs state=latest
+
+- name: Install npm
+  apt: name=npm state=latest
+
+- name: pm2 stop 
+  command: bash -lc "cd /root/node-js-sample/ && pm2 stop index.js"
+  ignore_errors: yes
+
+- name: Copy node-js-sample to nodes
+  copy: src=/etc/ansible/nodejs/files/node-js-sample dest=/root/
+
+- name: npm install
+  command: bash -lc "cd /root/node-js-sample/ && npm install"
+
+- name: pm2 install 
+  command: bash -lc "cd /root/node-js-sample/ && npm install pm2 -g"
+
+- name: pm2 start
+  command: bash -lc "cd /root/node-js-sample/ && pm2 start index.js"
+
